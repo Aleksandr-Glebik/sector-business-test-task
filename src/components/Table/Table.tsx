@@ -2,11 +2,17 @@ import React from 'react'
 import clsx from 'clsx'
 import styles from './Table.module.css'
 import sortIcon from '../../assets/img/sortIcon.png'
+import { PostsItemsType } from '../../redux/slices/postsSlice'
+interface TableType {
+    posts: PostsItemsType
+}
 
-const Table: React.FC = () => {
+const Table: React.FC<TableType> = ({ posts }) => {
   const btnSortHandler = () => {
     console.log('click btnSortHandler')
   }
+
+  console.log('posts in Table', posts);
 
   return (
     <table className={styles.table}>
@@ -54,16 +60,30 @@ const Table: React.FC = () => {
             </tr>
         </thead>
         <tbody className={styles.body}>
-            <tr className={clsx(styles.tr, styles['body-tr'])}>
-                <td className={clsx(styles.td, styles.id, styles['body-td'])}>1</td>
-                <td className={clsx(styles.td, styles.title, styles['body-td'])}>sunt aut facere repellat provident occaecati excepturi optio reprehenderit</td>
-                <td className={clsx(styles.td, styles.text, styles['body-td'])}>quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto</td>
-            </tr>
-            <tr className={clsx(styles.tr, styles['body-tr'])}>
-                <td className={clsx(styles.td, styles.id, styles['body-td'])}>2</td>
-                <td className={clsx(styles.td, styles.title, styles['body-td'])}>qui est esse</td>
-                <td className={clsx(styles.td, styles.text, styles['body-td'])}>est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla</td>
-            </tr>
+            {
+                posts.map(post => (
+                    <tr
+                      key={post.id}
+                      className={clsx(styles.tr, styles['body-tr'])}
+                    >
+                        <td
+                          className={clsx(styles.td, styles.id, styles['body-td'])}
+                        >
+                            {post.id}
+                        </td>
+                        <td
+                          className={clsx(styles.td, styles.title, styles['body-td'])}
+                        >
+                            {post.title}
+                        </td>
+                        <td
+                          className={clsx(styles.td, styles.text, styles['body-td'])}
+                        >
+                            {post.body}
+                        </td>
+                    </tr>
+                ))
+            }
         </tbody>
     </table>
   )

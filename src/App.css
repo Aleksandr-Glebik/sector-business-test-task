@@ -10,3 +10,13 @@
   max-width: 1232px;
   margin: 0 auto;
 }
+
+.error {
+  width: 100%;
+  margin-top: 100px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
