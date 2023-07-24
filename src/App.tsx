@@ -7,13 +7,16 @@ import Loader from './components/Loader'
 import { useAppDispatch } from './redux/store'
 import { selectPosts, fetchPosts, Status } from './redux/slices/postsSlice'
 import { useSelector } from 'react-redux'
+import Pagination from './components/Pagination/Pagination'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { posts, status } = useSelector(selectPosts)
-
-  // console.log('posts', posts)
-  // console.log('status', status)
+  const {
+    posts,
+    status,
+    currentPage,
+    totalPages
+  } = useSelector(selectPosts)
 
   useEffect(() => {
     dispatch(fetchPosts())
@@ -35,11 +38,12 @@ const App: React.FC = () => {
                 {
                   status === Status.LOADING
                     ? <Loader />
-                    : <Table posts={posts}/>
+                    : <Table posts={posts} currentPage={currentPage}/>
                 }
               </>
             )
       }
+      <Pagination currentPage={currentPage} totalPages={totalPages}/>
     </div>
   )
 }

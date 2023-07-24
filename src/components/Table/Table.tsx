@@ -3,11 +3,13 @@ import clsx from 'clsx'
 import styles from './Table.module.css'
 import sortIcon from '../../assets/img/sortIcon.png'
 import { PostsItemsType } from '../../redux/slices/postsSlice'
+import { filterPostsOnCurrentPage } from '../../utils/filterPostsOnCurrentPage'
 interface TableType {
     posts: PostsItemsType
+    currentPage: number
 }
 
-const Table: React.FC<TableType> = ({ posts }) => {
+const Table: React.FC<TableType> = ({ posts, currentPage }) => {
   const btnSortHandler = () => {
     console.log('click btnSortHandler')
   }
@@ -61,7 +63,7 @@ const Table: React.FC<TableType> = ({ posts }) => {
         </thead>
         <tbody className={styles.body}>
             {
-                posts.map(post => (
+                filterPostsOnCurrentPage(posts, currentPage).map(post => (
                     <tr
                       key={post.id}
                       className={clsx(styles.tr, styles['body-tr'])}

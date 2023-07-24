@@ -20,11 +20,15 @@ export enum Status {
 interface PostsSliceState {
     posts: PostsItemsType
     status: Status
+    totalPages: number
+    currentPage: number
 }
 
 const initialState: PostsSliceState = {
     posts: [],
-    status: Status.LOADING
+    status: Status.LOADING,
+    totalPages: 0,
+    currentPage: 1
 }
 
 export const fetchPosts = createAsyncThunk<PostsItemsType>(
@@ -42,26 +46,32 @@ export const postsSlice = createSlice({
   reducers: {
     setPosts(state, actions: PayloadAction<PostsItemsType>) {
         state.posts = actions.payload
+    },
+    setCurrentPage(state, actions: PayloadAction<number>) {
+        state.currentPage = actions.payload
     }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPosts.pending, (state) => {
         state.status = Status.LOADING
         state.posts = []
+        state.totalPages = 0
     })
     builder.addCase(fetchPosts.fulfilled, (state, actions: PayloadAction<PostsItemsType>) => {
         state.posts = actions.payload
         state.status = Status.SUCCESS
+        state.totalPages = Math.ceil(actions.payload.length / 10)
     })
     builder.addCase(fetchPosts.rejected, (state) => {
         state.status = Status.ERROR
         state.posts = []
+        state.totalPages = 0
     })
   }
 })
 
 export const selectPosts = (state: RootState) => state.posts
 
-export const { setPosts } = postsSlice.actions
+export const { setPosts, setCurrentPage } = postsSlice.actions
 
 export default postsSlice.reducer
