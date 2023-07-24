@@ -3,38 +3,59 @@ import clsx from 'clsx'
 import styles from './Table.module.css'
 import sortIcon from '../../assets/img/sortIcon.png'
 import { PostsItemsType } from '../../redux/slices/postsSlice'
+import {
+  filterPostsId,
+  filterPostsTitle,
+  filterPostDefault,
+  filterPostsTextLength
+} from '../../redux/slices/postsSlice'
+import { useAppDispatch } from '../../redux/store'
 interface TableType {
     posts: PostsItemsType
 }
 
 const Table: React.FC<TableType> = ({ posts }) => {
+  const dispatch = useAppDispatch()
+
   const [filterId, setFilterId] = useState(false)
+  const [filterTitle, setFilterTitle] = useState(false)
+  const [filterText, setFilterText] = useState(false)
 
   const btnSortHandlerId = () => {
-    console.log('click btnSortHandler')
+    setFilterTitle(false)
+    setFilterText(false)
     setFilterId(prev => !prev)
   }
   const btnSortHandlerTitle = () => {
-    console.log('click btnSortHandler')
+    setFilterId(false)
+    setFilterText(false)
+    setFilterTitle(prev => !prev)
   }
   const btnSortHandlerText = () => {
-    console.log('click btnSortHandler')
+    setFilterTitle(false)
+    setFilterId(false)
+    setFilterText(prev => !prev)
   }
 
-  console.log('posts in Table', posts)
-  console.log('filter', filterId)
+  useEffect(() => {
+    dispatch(filterPostsId())
+  }, [filterId, dispatch])
 
   useEffect(() => {
-    if (filterId) {
-      posts.sort((a, b) => {
-        return a.id - b.id
-      })
-    } else if (filterId === false) {
-      posts.sort((a, b) => {
-        return b.id - a.id
-      })
+    if (filterTitle) {
+      dispatch(filterPostsTitle())
+    } else {
+      dispatch(filterPostDefault())
     }
-  }, [filterId, posts])
+  }, [filterTitle, dispatch])
+
+  useEffect(() => {
+    if (filterText) {
+      dispatch(filterPostsTextLength())
+    } else {
+      dispatch(filterPostDefault())
+    }
+  }, [filterText, dispatch])
 
   return (
     <table className={styles.table}>
@@ -65,7 +86,10 @@ const Table: React.FC<TableType> = ({ posts }) => {
                         <img
                             alt='sort icon'
                             src={sortIcon}
-                            className={clsx(styles.icon)}
+                            className={clsx(
+                              styles.icon,
+                              filterTitle ? styles.filtered : styles.notFiltered
+                            )}
                         />
                     </button>
                 </th>
@@ -78,7 +102,10 @@ const Table: React.FC<TableType> = ({ posts }) => {
                         <img
                             alt='sort icon'
                             src={sortIcon}
-                            className={clsx(styles.icon)}
+                            className={clsx(
+                              styles.icon,
+                              filterText ? styles.filtered : styles.notFiltered
+                            )}
                         />
                     </button>
                 </th>

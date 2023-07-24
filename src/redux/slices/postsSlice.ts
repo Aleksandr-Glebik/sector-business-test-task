@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { RootState } from '../store'
+import { filterPostsOnCurrentPage } from '../../utils/filterPostsOnCurrentPage'
 
 export interface PostItemType {
     userId: number
@@ -22,13 +23,15 @@ interface PostsSliceState {
     status: Status
     totalPages: number
     currentPage: number
+    postsOnCurrentPage: PostsItemsType
 }
 
 const initialState: PostsSliceState = {
     posts: [],
     status: Status.LOADING,
     totalPages: 0,
-    currentPage: 1
+    currentPage: 1,
+    postsOnCurrentPage: []
 }
 
 export const fetchPosts = createAsyncThunk<PostsItemsType>(
@@ -49,6 +52,27 @@ export const postsSlice = createSlice({
     },
     setCurrentPage(state, actions: PayloadAction<number>) {
         state.currentPage = actions.payload
+    },
+    setPostsOnCurrentPage(state, actions: PayloadAction<number>) {
+        state.postsOnCurrentPage = filterPostsOnCurrentPage(state.posts, actions.payload)
+    },
+    filterPostsId(state) {
+        state.postsOnCurrentPage = state.postsOnCurrentPage.reverse()
+    },
+    filterPostsTitle(state) {
+        state.postsOnCurrentPage = state.postsOnCurrentPage.sort((a, b) => {
+            return a.title > b.title ? 1 : -1
+        })
+    },
+    filterPostDefault(state) {
+        state.postsOnCurrentPage = state.postsOnCurrentPage.sort((a, b) => {
+            return a.id > b.id ? 1 : -1
+        })
+    },
+    filterPostsTextLength(state) {
+        state.postsOnCurrentPage = state.postsOnCurrentPage.sort((a, b) => {
+            return a.body.length < b.body.length ? 1 : -1
+        })
     }
   },
   extraReducers: (builder) => {
@@ -56,22 +80,33 @@ export const postsSlice = createSlice({
         state.status = Status.LOADING
         state.posts = []
         state.totalPages = 0
+        state.postsOnCurrentPage = []
     })
     builder.addCase(fetchPosts.fulfilled, (state, actions: PayloadAction<PostsItemsType>) => {
         state.posts = actions.payload
         state.status = Status.SUCCESS
         state.totalPages = Math.ceil(actions.payload.length / 10)
+        state.postsOnCurrentPage = filterPostsOnCurrentPage(actions.payload, 1)
     })
     builder.addCase(fetchPosts.rejected, (state) => {
         state.status = Status.ERROR
         state.posts = []
         state.totalPages = 0
+        state.postsOnCurrentPage = []
     })
   }
 })
 
 export const selectPosts = (state: RootState) => state.posts
 
-export const { setPosts, setCurrentPage } = postsSlice.actions
+export const {
+    setPosts,
+    setCurrentPage,
+    setPostsOnCurrentPage,
+    filterPostsId,
+    filterPostsTitle,
+    filterPostDefault,
+    filterPostsTextLength
+} = postsSlice.actions
 
 export default postsSlice.reducer
