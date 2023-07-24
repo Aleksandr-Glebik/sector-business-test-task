@@ -75,5 +75,12 @@
 }
 
 .icon:hover {
-    transform: scale(1.1);
+    /* transform: scale(1.1); */
+}
+
+.filtered {
+    transform: rotate(180deg);
+}
+.notFiltered {
+    transform: rotate(0deg);
 }

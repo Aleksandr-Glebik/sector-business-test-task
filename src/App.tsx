@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef} from 'react'
 import './App.css'
 import Table from './components/Table/Table'
 import SearchComp from './components/SearchComp/SearchComp'
 import Loader from './components/Loader'
 
 import { useAppDispatch } from './redux/store'
-import { selectPosts, fetchPosts, Status } from './redux/slices/postsSlice'
+import { selectPosts, fetchPosts, Status, PostsItemsType } from './redux/slices/postsSlice'
 import { useSelector } from 'react-redux'
 import Pagination from './components/Pagination/Pagination'
+import { filterPostsOnCurrentPage } from './utils/filterPostsOnCurrentPage'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
+  
   const {
     posts,
     status,
@@ -18,9 +20,16 @@ const App: React.FC = () => {
     totalPages
   } = useSelector(selectPosts)
 
+  const postsOnCurrentPage = useRef<null | PostsItemsType>()
+  postsOnCurrentPage.current = filterPostsOnCurrentPage(posts, currentPage)
+
   useEffect(() => {
     dispatch(fetchPosts())
   }, [dispatch])
+
+  useEffect(() => {
+    postsOnCurrentPage.current = filterPostsOnCurrentPage(posts, currentPage)
+  }, [currentPage, posts])
 
   return (
     <div className='wrapper'>
@@ -38,7 +47,9 @@ const App: React.FC = () => {
                 {
                   status === Status.LOADING
                     ? <Loader />
-                    : <Table posts={posts} currentPage={currentPage}/>
+                    : postsOnCurrentPage.current && <Table
+                        posts={postsOnCurrentPage.current}
+                      />
                 }
               </>
             )

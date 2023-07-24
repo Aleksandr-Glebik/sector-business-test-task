@@ -1,20 +1,40 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import clsx from 'clsx'
 import styles from './Table.module.css'
 import sortIcon from '../../assets/img/sortIcon.png'
 import { PostsItemsType } from '../../redux/slices/postsSlice'
-import { filterPostsOnCurrentPage } from '../../utils/filterPostsOnCurrentPage'
 interface TableType {
     posts: PostsItemsType
-    currentPage: number
 }
 
-const Table: React.FC<TableType> = ({ posts, currentPage }) => {
-  const btnSortHandler = () => {
+const Table: React.FC<TableType> = ({ posts }) => {
+  const [filterId, setFilterId] = useState(false)
+
+  const btnSortHandlerId = () => {
+    console.log('click btnSortHandler')
+    setFilterId(prev => !prev)
+  }
+  const btnSortHandlerTitle = () => {
+    console.log('click btnSortHandler')
+  }
+  const btnSortHandlerText = () => {
     console.log('click btnSortHandler')
   }
 
-  console.log('posts in Table', posts);
+  console.log('posts in Table', posts)
+  console.log('filter', filterId)
+
+  useEffect(() => {
+    if (filterId) {
+      posts.sort((a, b) => {
+        return a.id - b.id
+      })
+    } else if (filterId === false) {
+      posts.sort((a, b) => {
+        return b.id - a.id
+      })
+    }
+  }, [filterId, posts])
 
   return (
     <table className={styles.table}>
@@ -24,12 +44,15 @@ const Table: React.FC<TableType> = ({ posts, currentPage }) => {
                     ID
                     <button
                       className={clsx(styles.btn)}
-                      onClick={btnSortHandler}
-                    >
+                      onClick={btnSortHandlerId}
+                      >
                         <img
                             alt='sort icon'
                             src={sortIcon}
-                            className={clsx(styles.icon)}
+                            className={clsx(
+                              styles.icon,
+                              filterId ? styles.filtered : styles.notFiltered
+                            )}
                         />
                     </button>
                 </th>
@@ -37,7 +60,7 @@ const Table: React.FC<TableType> = ({ posts, currentPage }) => {
                     Заголовок
                     <button
                       className={clsx(styles.btn)}
-                      onClick={btnSortHandler}
+                      onClick={btnSortHandlerTitle}
                     >
                         <img
                             alt='sort icon'
@@ -50,7 +73,7 @@ const Table: React.FC<TableType> = ({ posts, currentPage }) => {
                     Описание
                     <button
                       className={clsx(styles.btn)}
-                      onClick={btnSortHandler}
+                      onClick={btnSortHandlerText}
                     >
                         <img
                             alt='sort icon'
@@ -63,7 +86,8 @@ const Table: React.FC<TableType> = ({ posts, currentPage }) => {
         </thead>
         <tbody className={styles.body}>
             {
-                filterPostsOnCurrentPage(posts, currentPage).map(post => (
+              posts &&
+                posts.map(post => (
                     <tr
                       key={post.id}
                       className={clsx(styles.tr, styles['body-tr'])}
