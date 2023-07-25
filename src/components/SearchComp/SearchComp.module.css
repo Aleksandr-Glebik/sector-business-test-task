@@ -48,3 +48,40 @@
         border: 1px solid #5A5C66;
     }
 }
+
+@media screen and (max-width: 768px) {
+    .container {
+        width: 500px;
+        height: 42px;
+        margin: 15px auto;
+    }
+    .img {
+        width: 12px;
+        height: 12px;
+        top: 12px;
+        right: 12px;
+    }
+    .input {
+        height: 42px;
+        padding: 15px 40px 15px 20px;
+        font-size: 12px;
+        line-height: 18px;
+    }
+}
+@media screen and (max-width: 576px) {
+    .container {
+        width: 300px;
+        height: 35px;
+        margin: 15px auto;
+    }
+    .img {
+        width: 15px;
+        height: 15px;
+    }
+    .input {
+        height: 35px;
+        padding: 10px 35px 10px 10px;
+        font-size: 10px;
+        line-height: 15px;
+    }
+}

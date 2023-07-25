@@ -8,7 +8,6 @@
     padding: 0 20px;
     margin-top: 16px;
     margin-bottom: 16px;
-
 }
 
 .list {
@@ -37,4 +36,25 @@
     font-size: 18px;
     line-height: 27px;
     font-weight: 600;
+}
+
+@media screen and (max-width: 768px) {
+    .item {
+        padding: 5px;
+        font-size: 12px;
+    }
+    .btn {
+        font-size: 14px;
+        line-height: 21px;
+    }
+}
+@media screen and (min-width: 320px) and (max-width: 375px) {
+    .item {
+        padding: 3%;
+        font-size: 10px;
+    }
+    .btn {
+        font-size: 12px;
+        line-height: 18px;
+    }
 }
