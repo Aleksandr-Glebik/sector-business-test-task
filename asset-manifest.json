@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/sector-business-test-task/static/css/main.bd0558f3.css",
+    "main.js": "/sector-business-test-task/static/js/main.a368ff88.js",
+    "index.html": "/sector-business-test-task/index.html",
+    "main.bd0558f3.css.map": "/sector-business-test-task/static/css/main.bd0558f3.css.map",
+    "main.a368ff88.js.map": "/sector-business-test-task/static/js/main.a368ff88.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bd0558f3.css",
+    "static/js/main.a368ff88.js"
+  ]
+}
