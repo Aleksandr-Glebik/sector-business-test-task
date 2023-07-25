@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { RootState } from '../store'
 import { filterPostsOnCurrentPage } from '../../utils/filterPostsOnCurrentPage'
+import { searchPosts } from '../../utils/searchPosts'
 
 export interface PostItemType {
     userId: number
@@ -34,11 +35,14 @@ const initialState: PostsSliceState = {
     postsOnCurrentPage: []
 }
 
-export const fetchPosts = createAsyncThunk<PostsItemsType>(
+export const fetchPosts = createAsyncThunk<PostsItemsType, string>(
     'posts/fetchPostsStatus',
-    async () => {
+    async (value = '') => {
         const url = 'https://jsonplaceholder.typicode.com/posts'
         const { data } = await axios.get<PostsItemsType>(url)
+        if (value) {
+            return searchPosts(data, value)
+        }
         return data
     }
 )

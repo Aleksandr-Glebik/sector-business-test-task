@@ -113,8 +113,8 @@ const Table: React.FC<TableType> = ({ posts }) => {
         </thead>
         <tbody className={styles.body}>
             {
-              posts &&
-                posts.map(post => (
+              posts.length > 0
+                ? posts.map(post => (
                     <tr
                       key={post.id}
                       className={clsx(styles.tr, styles['body-tr'])}
@@ -136,6 +136,13 @@ const Table: React.FC<TableType> = ({ posts }) => {
                         </td>
                     </tr>
                 ))
+                : (<tr
+                    className={clsx(styles.tr, styles['body-tr'], styles['tr-notFound'])}
+                  >
+                    <td className={clsx(styles['td-notFound'])}>
+                      Данные не найдены
+                    </td>
+                  </tr>)
             }
         </tbody>
     </table>

@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { useDispatch } from 'react-redux'
 import postsSlice from './slices/postsSlice'
+import searchSlice from './slices/searchSlice'
 
 const store = configureStore({
     reducer: {
-        posts: postsSlice
+        posts: postsSlice,
+        searchValue: searchSlice
     }
 })
 

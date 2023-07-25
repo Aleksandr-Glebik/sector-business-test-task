@@ -84,3 +84,13 @@
 .notFiltered {
     transform: rotate(0deg);
 }
+
+.tr-notFound {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.td-notFound {
+    padding: 25px;
+}

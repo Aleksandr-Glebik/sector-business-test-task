@@ -2,20 +2,23 @@ import React, { useEffect } from 'react'
 import './App.css'
 import Table from './components/Table/Table'
 import SearchComp from './components/SearchComp/SearchComp'
-import Loader from './components/Loader'
+import Loader from './components/Loader/Loader'
 
 import { useAppDispatch } from './redux/store'
 import {
   selectPosts,
   fetchPosts,
   Status,
-  setPostsOnCurrentPage
+  setPostsOnCurrentPage,
+  setCurrentPage
 } from './redux/slices/postsSlice'
 import { useSelector } from 'react-redux'
 import Pagination from './components/Pagination/Pagination'
+import { selectSearchValue } from './redux/slices/searchSlice'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
+  const { searchValue } = useSelector(selectSearchValue)
 
   const {
     posts,
@@ -26,8 +29,14 @@ const App: React.FC = () => {
   } = useSelector(selectPosts)
 
   useEffect(() => {
-    dispatch(fetchPosts())
+    dispatch(fetchPosts(''))
+    dispatch(setCurrentPage(1))
   }, [dispatch])
+
+  useEffect(() => {
+    dispatch(fetchPosts(searchValue))
+    dispatch(setCurrentPage(1))
+  }, [searchValue, dispatch])
 
   useEffect(() => {
     dispatch(setPostsOnCurrentPage(currentPage))
@@ -56,7 +65,11 @@ const App: React.FC = () => {
               </>
             )
       }
-      <Pagination currentPage={currentPage} totalPages={totalPages}/>
+      {
+        totalPages > 0
+          ? <Pagination currentPage={currentPage} totalPages={totalPages}/>
+          : null
+      }
     </div>
   )
 }
